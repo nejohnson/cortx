@@ -8,8 +8,8 @@ typedef uint16          CTX_EvTime;
 typedef uint8           CTX_Task;
 typedef uint8           CTX_Event;
 
-extern void ctxInit( void );
-extern void ctxRun( void );
+extern void ctxInit(void);
+extern void ctxRun(void);
 extern void ctxPostEvent( CTX_Task, CTX_Event, CTX_EvTime );
 extern bool ctxCancelEvent( CTX_Task, CTX_Event );
 extern void ctxIntPostEvent( CTX_Task, CTX_Event );

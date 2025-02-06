@@ -17,12 +17,12 @@
  **
  *****************************************************************************/
 
-typedef struct tagEventRec {
-    uint16 Time;
-    uint8  Event;
-    uint8  Next:4;
-    uint8  Task:4;
-} T_EventRec;
+typedef struct {
+    uint16 time;
+    uint8  event;
+    uint8  next:4;
+    uint8  taskId:4;
+} CtxEvent_T;
 
 /*****************************************************************************
  **
