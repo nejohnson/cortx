@@ -3,14 +3,12 @@
 
 void ctxInit(void)
 {
-   uint8 i;
+   _ctxWaitingQ = CTX_QUEUE_LENGTH;
+   _ctxFreeQ    = 0;
 
-   ctxWaitingQ = CTX_QUEUE_LENGTH;
-   ctxFreeQ    = 0;
-
-   for (i = 0; i < CTX_QUEUE_LENGTH;)
-      ctxEventQ[i].next = ++i;
-
-   for (i = 0; i != CTX_TASKID_LIST_END; i++)
+   for (CTX_QIdx i = 0; i < CTX_QUEUE_LENGTH;i++)
+      _ctxEventQ[i].next = i+1;
+    
+   for (uint8_t i = 0; i != CTX_TASKID_LIST_END; i++)
       (ctxTaskTable[i])(CTX_EV_INIT);
 }

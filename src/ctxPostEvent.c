@@ -1,48 +1,44 @@
 /* cortx.c */
 #include "cortx.h"
 
-int8 ctxPostEvent(CTX_EvTime  evTime,
-                  CTX_TaskId  taskId,
+bool ctxPostEvent(CTX_EvTime evTime, CTX_TaskId taskId,
                   CTX_EventId eventId)
 {
-   CTX_QIdx newIdx = ctxFreeQ;
-    
-   if (newIdx == CTX_QUEUE_END)
-      return -1;
+   CTX_QIdx ev = _ctxFreeQ;
 
-   ctxFreeQ = ctxEventQ[newIdx].next;
+   if (ev == CTX_QUEUE_END)
+      return false;
+   _ctxFreeQ = _ctxEventQ[ev].next;
+   _ctxEventQ[ev].taskId  = taskId;
+   _ctxEventQ[ev].eventId = eventId;
 
-   ctxEventQ[newIdx].eventId = eventId;
-   ctxEventQ[newIdx].taskId  = taskId;
-   
-   if (CtxEventQ[CtxWaitingQ].evTime > evTime)
+   if (_ctxWaitingQ == CTX_QUEUE_END
+   ||  evTime < _ctxEventQ[_ctxWaitingQ].evTime)
    {
-      CtxEventQ[CtxWaitingQ].evTime -= evTime;
-      CtxEventQ[newIdx].next         = CtxWaitingQ;
-      CtxWaitingQ                    = newIdx;
-      return 0;
+      _ctxEventQ[ev].next   = _ctxWaitingQ;
+      _ctxEventQ[ev].evTime = evTime;
+      _ctxWaitingQ          = ev;
    }
-   
-   for (CTX_QIdx idx = ctxWaitingQ;;)
+   else
    {
-      CTX_QIdx next = ctxEventQ[idx].next;
-      
-      TODO!!!
-      
-      if (next == CTX_QUEUE_END
-      ||  evTime < ctxEventQ[next].evTime)
+      CTX_QIdx idx  = _ctxWaitingQ;
+      CTX_QIdx next = _ctxEventQ[idx].next;   
+      while(1)
       {
-	 ctxEventQ[idx].next    = newIdx;
-	 ctxEventQ[newIdx].next = next;
-	 ctxEventQ[idx].evTime  = evTime;
-         return 0;
-      }
-      else
-      {
-         evTime -= ctxEventQ[next].evTime
-         idx = next;
+         evTime -= _ctxEventQ[idx].evTime;
+         if (next == CTX_QUEUE_END
+         ||  evTime < _ctxEventQ[next].evTime)
+         {
+            _ctxEventQ[ev].next   = next;
+            _ctxEventQ[ev].evTime = evTime;
+            _ctxEventQ[idx].next  = ev;
+            break;
+         }
+         idx  = _ctxEventQ[idx].next;
+         next = _ctxEventQ[idx].next;
       }
    }
-   
-   return 0;
+   if (_ctxEventQ[ev].next != CTX_QUEUE_END)
+      _ctxEventQ[_ctxEventQ[ev].next].evTime -= evTime;
+   return true;
 }
