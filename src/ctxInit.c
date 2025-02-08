@@ -10,5 +10,5 @@ void ctxInit(void)
       _ctxEventQ[i].next = i+1;
     
    for (uint8_t i = 0; i != CTX_TASKID_LIST_END; i++)
-      (ctxTaskTable[i])(CTX_EV_INIT);
+      (_ctxTaskTable[i])(CTX_EV_INIT);
 }

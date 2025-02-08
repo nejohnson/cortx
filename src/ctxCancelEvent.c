@@ -1,4 +1,4 @@
-/* cortx.c */
+/* ctxCancelEvent.c */
 #include "cortx.h"
 
 bool ctxCancelEvent(CTX_TaskId  taskId,

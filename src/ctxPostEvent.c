@@ -1,8 +1,9 @@
-/* cortx.c */
+/* ctxPostEvent.c */
 #include "cortx.h"
 
-bool ctxPostEvent(CTX_EvTime evTime, CTX_TaskId taskId,
-                  CTX_EventId eventId)
+bool ctxPostEvent(CTX_TaskId  taskId,
+                  CTX_EventId eventId,
+                  CTX_EvTime  evTime)
 {
    CTX_QIdx ev = _ctxFreeQ;
 
